@@ -367,7 +367,8 @@ function chrome() {
   document.documentElement.lang = lang;
   document.title = lang === "vi" ? "handmadebyhnhi – Đồ móc handmade" : "handmadebyhnhi – Handmade crochet";
   $("#logo").href = href("");
-  $("#nav").innerHTML = s.nav.map(([p, l]) => `<a href="${href(p)}">${l}</a>`).join("");
+  const ico = { "": "🏠", "san-pham": "🛍️", quiz: "✨" };
+  $("#nav").innerHTML = s.nav.map(([p, l]) => `<a href="${href(p)}" aria-label="${l}" title="${l}"><span class="ni" aria-hidden="true">${ico[p]}</span><span class="nl">${l}</span></a>`).join("");
   document.querySelectorAll(".lang button").forEach(b => b.classList.toggle("on", b.dataset.lang === lang));
   const pol = POLICIES[lang];
   $("#footer").innerHTML = `<div>${s.footLegal}</div><div class="links">${Object.entries(pol).map(([k, v]) => `<a href="${href("chinh-sach/" + k)}">${v[0]}</a>`).join("")}<a href="https://instagram.com/${SETTINGS.instagram}" target="_blank" rel="noopener">Instagram</a></div><div class="muted">© ${new Date().getFullYear()} handmadebyhnhi · Handmade with ♥</div>`;

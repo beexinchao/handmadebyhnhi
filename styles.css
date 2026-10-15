@@ -72,11 +72,11 @@ pre.order{white-space:pre-wrap;background:#fff;border:1px solid var(--line);bord
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.4);display:grid;place-items:center;z-index:70;padding:16px}.modal-in{background:#fff;border-radius:16px;padding:18px;max-width:480px;width:100%}.modal textarea{width:100%}
 @media(max-width:720px){
   body{font-size:1rem}
-  .site-header{display:grid;grid-template-columns:1fr auto;gap:6px 10px;padding:8px 14px}
-  .logo{font-size:1.5rem!important}
-  #nav{grid-column:1/-1;order:3;flex:none;flex-wrap:nowrap;overflow-x:auto;gap:6px;margin:0 -14px;padding:0 14px 2px;scrollbar-width:none;font-size:.9rem}
-  #nav::-webkit-scrollbar{display:none}
-  #nav a{white-space:nowrap;padding:6px 12px;border-radius:99px;background:var(--alt);color:var(--ink)}
+  .site-header{display:flex;flex-wrap:nowrap;gap:8px;padding:6px 12px;min-height:52px}
+  .logo .lt,.nl{display:none}.logo .li{font-size:1.6rem}
+  #nav{flex:1;display:flex;justify-content:center;gap:10px;margin:0}
+  #nav a{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:var(--alt)}
+  #nav .ni{font-size:1.3rem;line-height:1}
   .lang button{min-height:34px;padding:4px 10px}
   .section{padding:28px 14px}
   .hero{padding:20px 14px 8px;gap:14px}.hero h1{font-size:2rem}.hero p{font-size:1rem}
