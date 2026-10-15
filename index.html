@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>handmadebyhnhi – Đồ móc handmade</title>
+  <meta name="description" content="Cửa hàng đồ len móc handmade: thú bông, túi xách, khăn, phụ kiện. Đặt hàng dễ dàng.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="#top">🧶 handmadebyhnhi</a>
+    <nav>
+      <a href="#products">Sản phẩm</a>
+      <a href="#about">Câu chuyện</a>
+      <a href="#contact">Liên hệ</a>
+    </nav>
+    <button class="cart-btn" id="openCart" aria-label="Mở giỏ hàng">🛒 <span id="cartCount">0</span></button>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div>
+        <h1>Đồ móc handmade,<br>làm bằng cả tình yêu</h1>
+        <p>Từng mũi len được móc tỉ mỉ bằng tay – quà tặng dễ thương cho bạn và người thân.</p>
+        <a class="btn" href="#products">Xem sản phẩm</a>
+      </div>
+      <div class="hero-art" aria-hidden="true">🧸</div>
+    </section>
+
+    <section id="products" class="section">
+      <h2>Sản phẩm</h2>
+      <div class="filters" id="filters"></div>
+      <div class="grid" id="grid"></div>
+    </section>
+
+    <section id="about" class="section about">
+      <h2>Câu chuyện của handmadebyhnhi</h2>
+      <p>handmadebyhnhi bắt đầu từ một cuộn len nhỏ và niềm đam mê móc. Mỗi sản phẩm đều được làm thủ công, dùng sợi cotton milk mềm, an toàn cho da. Bạn cũng có thể đặt làm theo màu và kích thước riêng.</p>
+    </section>
+
+    <section id="contact" class="section">
+      <h2>Liên hệ &amp; đặt hàng</h2>
+      <form id="contactForm" class="form">
+        <input name="name" placeholder="Họ tên" required>
+        <input name="phone" placeholder="Số điện thoại" required>
+        <textarea name="msg" rows="4" placeholder="Bạn muốn đặt làm gì?" required></textarea>
+        <button class="btn" type="submit">Gửi tin nhắn</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">© <span id="year"></span> handmadebyhnhi · Handmade with ♥</footer>
+
+  <aside class="cart" id="cart" aria-hidden="true">
+    <div class="cart-head"><h3>Giỏ hàng</h3><button id="closeCart" aria-label="Đóng">✕</button></div>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-foot">
+      <div class="total"><span>Tổng</span><strong id="cartTotal">0₫</strong></div>
+      <form id="checkoutForm" class="form">
+        <input name="name" placeholder="Họ tên" required>
+        <input name="phone" placeholder="Số điện thoại" required>
+        <input name="address" placeholder="Địa chỉ nhận hàng" required>
+        <button class="btn" type="submit">Đặt hàng</button>
+      </form>
+    </div>
+  </aside>
+  <div class="overlay" id="overlay"></div>
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
