@@ -3,7 +3,7 @@
   --bg:#fbf8ff;--card:#fff;--ink:#16161a;--muted:#5f5e6b;--line:#e8e8ee;
   --low:#f4f2ff;--mid:#eeecf9;--high:#e8e7f4;--primary:#e11d62;--primary-d:#b9004c;--rose-soft:#ffd9de;
   --green:#006b33;--amber:#fff8e7;--amber-t:#7a5800;
-  --serif:"Playfair Display",Georgia,serif;--hand:"Caveat","Segoe Script",cursive;--sans:"Roboto Flex","Segoe UI",system-ui,sans-serif;
+  --serif:"Playfair Display",Georgia,serif;--hand:"Patrick Hand","Segoe Print",cursive;--sans:"Roboto Flex","Segoe UI",system-ui,sans-serif;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -13,7 +13,7 @@ h1{font-size:clamp(2rem,5vw,3rem)} h2{font-size:clamp(1.5rem,3.2vw,2rem)} h3{fon
 p{margin:0 0 .8em}
 a{color:inherit;text-decoration:none}
 button{font-family:inherit}
-.serif{font-family:var(--serif)} .hand{font-family:var(--hand);font-size:1.25rem;font-weight:600} .r{color:var(--primary-d)} .muted{color:var(--muted)}
+.serif{font-family:var(--serif)} .hand{font-family:var(--hand);font-size:1.3rem;font-weight:400} .r{color:var(--primary-d)} .muted{color:var(--muted)}
 .primary-t{color:var(--primary-d);font-weight:700} .center{text-align:center} .block{display:block} .up{text-transform:uppercase;letter-spacing:.05em;font-size:.8rem} .mono{font-family:ui-monospace,Consolas,monospace}
 .big-hand{font-size:1.5rem} .grow{flex:1} .full{width:100%} .it{font-style:italic}
 .skip{position:absolute;left:-999px}.skip:focus{left:8px;top:8px;background:#fff;padding:8px;z-index:99}
@@ -103,7 +103,7 @@ a.card:hover .link{text-decoration:underline}
 .form .lab+input,.form .lab+textarea{margin-top:6px}
 input,select,textarea{font:inherit;padding:12px 14px;border:0;border-radius:12px;background:var(--low);color:var(--ink);width:100%;min-height:48px}
 input:focus,select:focus,textarea:focus{outline:2px solid var(--primary);background:#fff}
-fieldset{border:0;padding:0;margin:0}legend{font-weight:700;font-size:.8rem;letter-spacing:.05em;text-transform:uppercase;margin-bottom:10px;width:100%;display:flex;justify-content:space-between}.hand.r{font-size:1.15rem;text-transform:none;letter-spacing:0;font-weight:600}
+fieldset{border:0;padding:0;margin:0}legend{font-weight:700;font-size:.8rem;letter-spacing:.05em;text-transform:uppercase;margin-bottom:10px;width:100%;display:flex;justify-content:space-between}.hand.r{font-size:1.15rem;text-transform:none;letter-spacing:0;font-weight:400}
 .swatches{display:grid;grid-template-columns:repeat(8,1fr);gap:10px}.swatches label{cursor:pointer}.swatches input{position:absolute;opacity:0;width:1px;height:1px;min-height:0}
 .swatches span{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,.12);transition:transform .15s}.swatches em{font-style:normal;font-weight:900;opacity:0}
 .swatches input:checked+span{box-shadow:0 0 0 3px #fff,0 0 0 6px var(--ink);transform:scale(1.05)}.swatches input:checked+span em{opacity:1}.swatches input:focus-visible+span{outline:2px solid var(--primary);outline-offset:4px}
