@@ -3,7 +3,7 @@
   --bg:#fbf8ff;--card:#fff;--ink:#16161a;--muted:#5f5e6b;--line:#e8e8ee;
   --low:#f4f2ff;--mid:#eeecf9;--high:#e8e7f4;--primary:#e11d62;--primary-d:#b9004c;--rose-soft:#ffd9de;
   --green:#006b33;--amber:#fff8e7;--amber-t:#7a5800;
-  --serif:"Playfair Display",Georgia,serif;--hand:"Patrick Hand","Segoe Print",cursive;--sans:"Roboto Flex","Segoe UI",system-ui,sans-serif;
+  --serif:"Playfair Display",Georgia,serif;--hand:"Itim","Segoe Print",cursive;--sans:"Roboto Flex","Segoe UI",system-ui,sans-serif;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -193,3 +193,10 @@ fieldset{border:0;padding:0;margin:0}legend{font-weight:700;font-size:.8rem;lett
   .ig-fab{right:12px;bottom:12px;padding:10px 14px}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+/* Phân vai font: Roboto Flex chủ đạo · Playfair Display chỉ cho tiêu đề lớn & logo · Itim cho điểm nhấn viết tay */
+h3,.serif,.faq summary,.price,.stats b,.num{font-family:var(--sans)}
+h3,.faq summary,.stats b{font-weight:700}
+.price,.big-price,.num{font-weight:700}
+h1,h2,h1.serif,h2.serif,.logo b,.foot-logo b{font-family:var(--serif)}
+.hand{font-size:1.15rem;line-height:1.3}
