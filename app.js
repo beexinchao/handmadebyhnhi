@@ -24,10 +24,12 @@ async function sb(path, opt = {}) {
     return body;
   } finally { clearTimeout(tm); }
 }
+let REMOTE_PRODUCTS = false; // chỉ gửi đơn lên Supabase khi sản phẩm cũng đang đọc từ Supabase
 async function loadRemote() {
   if (!REMOTE()) return;
   try {
     const [rows, st] = await Promise.all([sb("products?select=slug,status,featured,sort,data&order=sort.asc"), sb("settings?select=key,value&is_public=eq.true")]);
+    if (rows.length) REMOTE_PRODUCTS = true;
     if (rows.length) PRODUCTS.splice(0, PRODUCTS.length, ...rows.map(r => ({ ...r.data, slug: r.slug, featured: r.featured, soldOut: r.status === "sold_out" })));
     for (const { key, value } of st) {
       if (key === "shop") { if (value.instagram) SETTINGS.instagram = value.instagram; if (value.email) SETTINGS.email = value.email; }
@@ -338,7 +340,7 @@ function wireCheckout() {
     setErr("agree", v.agree ? "" : x("Bạn cần đồng ý điều khoản trước khi gửi đơn", "Please accept the terms before sending"));
     if (bad) return;
     const order = { code: "DH-" + String(Math.floor(100000 + Math.random() * 900000)), status: "pending_payment", at: Date.now(), draft: d, customer: { name: v.name.trim(), phone: v.phone, email: v.email, address: v.address.trim(), zone: v.zone }, shipping: fee(), subtotal: d.unit, total: d.unit + fee(), lang };
-    if (REMOTE()) {
+    if (REMOTE() && REMOTE_PRODUCTS) {
       const btn = f.querySelector("button[type=submit]"); btn.disabled = true; $("#subTxt").textContent = x("Đang gửi đơn…", "Sending…");
       try {
         const res = await sb("rpc/create_order", { method: "POST", timeout: 10000, body: JSON.stringify({ payload: { item: { slug: d.slug, size: d.size, color: d.color, text: d.text || "", note: d.note || "" }, customer: { name: order.customer.name, phone: order.customer.phone, email: order.customer.email, address: order.customer.address, zone: order.customer.zone }, lang, quiz_ref: (location.hash.match(/KQ-\d+/) || [""])[0] || null } }) });
