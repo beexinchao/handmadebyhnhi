@@ -212,3 +212,8 @@ h1,h2,h1.serif,h2.serif,.logo b,.foot-logo b{font-family:var(--serif)}
 .main-img{position:relative;aspect-ratio:4/5;border-radius:24px;overflow:hidden}.main-img .status{top:14px;right:14px}
 .thumbs{display:flex;gap:10px}.th{width:72px;height:72px;border-radius:12px;overflow:hidden;border:2px solid transparent;padding:0;cursor:pointer;background:#fff;opacity:.75}.th.on{border-color:var(--ink);opacity:1}.th img{width:100%;height:100%;object-fit:cover;display:block}
 @media(max-width:720px){.gallery{order:1}.main-img{aspect-ratio:1}}
+
+/* QR thanh toán nhanh */
+.qr-box{display:flex;flex-direction:column;align-items:center;gap:12px;background:var(--low);border-radius:16px;padding:16px;margin-bottom:12px}
+.qr-tabs{display:flex;gap:6px;background:#fff;border-radius:99px;padding:3px}.qr-tab{border:0;background:transparent;padding:6px 16px;border-radius:99px;font-weight:600;font-size:.85rem;cursor:pointer;color:var(--muted)}.qr-tab.on{background:var(--ink);color:#fff}
+.qr-img{width:min(280px,100%);height:auto;border-radius:12px;background:#fff;padding:6px}

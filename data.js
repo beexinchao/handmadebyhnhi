@@ -4,8 +4,8 @@ const SETTINGS = {
   instagram: "handmadebyhnhi",      // TODO: xác nhận tên tài khoản Instagram thật
   email: "handmadebyhnhi@gmail.com", // email nhận đơn (lấy từ thiết kế Stitch, chủ shop xác nhận)
   banks: [                          // TODO: chủ shop xác nhận thông tin chuyển khoản thật (lấy từ bản thiết kế Stitch)
-    { bank: "MB Bank", number: "97042299887766", holder: "HOANG NHAT NHI" },
-    { bank: "Techcombank", number: "19036789123018", holder: "HOANG NHAT NHI" },
+    { bank: "MB Bank", code: "mb", number: "97042299887766", holder: "HOANG NHAT NHI" },
+    { bank: "Techcombank", code: "tcb", number: "19036789123018", holder: "HOANG NHAT NHI" },
   ],
   shipDays: 3,                      // thời gian ship ước tính (ngày)
   minScore: 40,                     // ngưỡng đề xuất tối thiểu (mục 5.3)
