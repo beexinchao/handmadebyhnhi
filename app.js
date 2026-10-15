@@ -13,6 +13,30 @@ const tagLabel = (g, k) => TAGS[g][k][L()];
 const pName = p => p[lang][0];
 const IG = () => SETTINGS.instagram;
 
+// ---------- Kết nối Supabase (tuỳ chọn; không cấu hình thì web dùng dữ liệu trong data.js) ----------
+const REMOTE = () => !!(typeof SUPABASE !== "undefined" && SUPABASE.url && SUPABASE.anonKey);
+async function sb(path, opt = {}) {
+  const ctl = new AbortController(); const tm = setTimeout(() => ctl.abort(), opt.timeout || 6000);
+  try {
+    const r = await fetch(SUPABASE.url + "/rest/v1/" + path, { ...opt, signal: ctl.signal, headers: { apikey: SUPABASE.anonKey, Authorization: "Bearer " + SUPABASE.anonKey, "Content-Type": "application/json", ...(opt.headers || {}) } });
+    const body = await r.json().catch(() => null);
+    if (!r.ok) throw Object.assign(new Error((body && (body.message || body.hint)) || r.statusText), { status: r.status });
+    return body;
+  } finally { clearTimeout(tm); }
+}
+async function loadRemote() {
+  if (!REMOTE()) return;
+  try {
+    const [rows, st] = await Promise.all([sb("products?select=slug,status,featured,sort,data&order=sort.asc"), sb("settings?select=key,value&is_public=eq.true")]);
+    if (rows.length) PRODUCTS.splice(0, PRODUCTS.length, ...rows.map(r => ({ ...r.data, slug: r.slug, featured: r.featured, soldOut: r.status === "sold_out" })));
+    for (const { key, value } of st) {
+      if (key === "shop") { if (value.instagram) SETTINGS.instagram = value.instagram; if (value.email) SETTINGS.email = value.email; }
+      if (key === "ship_zones" && value.length) SETTINGS.shipZones = value;
+      if (key === "banks" && value.length) SETTINGS.banks = value;
+    }
+  } catch (e) { console.warn("Supabase không tải được, dùng dữ liệu mặc định:", e.message); }
+}
+
 // ---------- Nội dung chính sách (theo thiết kế Stitch; bản nháp) ----------
 const POLICY_ORDER = ["doi-tra", "van-chuyen", "bao-mat", "dieu-khoan"];
 const POLICIES = {
@@ -170,7 +194,7 @@ views.product = slug => {
       <label class="lab">${x("Ghi chú thêm cho thợ móc", "Notes for the crocheter")}<textarea name="note" rows="2" placeholder="${x("Ví dụ: quai dài/ngắn, cách phối màu riêng theo ý bạn…", "e.g. longer strap, your own colour mix…")}">${esc(dd.note || "")}</textarea></label>
       <div class="eta"><span class="round sm">⏱</span><div><b>${x("Thời gian dự kiến nhận hàng", "Estimated delivery")}: ${etaDate(p)}</b><small class="muted">${x("Hôm nay", "Today")} + ${p.days} ${x("ngày móc", "days making")} + ${SETTINGS.shipDays} ${x("ngày vận chuyển", "days shipping")}</small></div></div>
       <p class="warn"><b>${x("Lưu ý hàng cá nhân hóa:", "Personalised items:")}</b> ${x("sản phẩm đan móc theo yêu cầu riêng nên không hoàn trả, trừ trường hợp có lỗi kỹ thuật từ đường kim mũi chỉ.", "custom-made pieces are non-returnable unless the fault is ours.")}</p>
-      <div class="row"><button class="btn dark big grow" type="submit">${x("Đặt may ngay", "Order now")} <b class="serif" id="btnPrice"></b> →</button><button class="btn soft" type="button" id="askIg">💬 ${x("Nhắn tin Instagram", "Message on Instagram")}</button></div>
+      <div class="row">${p.soldOut ? `<button class="btn dark big grow" type="button" disabled>${x("Tạm hết slot – nhắn shop để đặt trước", "Fully booked – message us to pre-order")}</button>` : `<button class="btn dark big grow" type="submit">${x("Đặt may ngay", "Order now")} <b class="serif" id="btnPrice"></b> →</button>`}<button class="btn soft" type="button" id="askIg">💬 ${x("Nhắn tin Instagram", "Message on Instagram")}</button></div>
     </form></div></div></section>`;
 };
 function wireProduct(slug) {
@@ -240,6 +264,7 @@ function wireQuiz() {
     if (qState.i < QUIZ.length - 1) { qState.i++; rerenderQuiz(); window.scrollTo(0, 0); return; }
     const ref = "KQ-" + String(Math.floor(1000 + Math.random() * 9000));
     const ss = store.get("quizSessions", []); ss.push({ ref, answers: a, lang, at: Date.now() }); store.set("quizSessions", ss.slice(-50));
+    if (REMOTE()) sb("quiz_sessions", { method: "POST", headers: { Prefer: "return=minimal" }, body: JSON.stringify({ ref, answers: a, lang }) }).catch(() => {});
     location.hash = `#/${lang}/ket-qua/${ref}?a=${encodeURIComponent(b64(a))}`;
   };
 }
@@ -301,7 +326,7 @@ function wireCheckout() {
   const fee = () => SETTINGS.shipZones.find(z => z.id === f.zone.value).fee;
   const upd = () => { $("#shipFee").textContent = money(fee()); const t = d.unit + fee(); $("#grand").textContent = money(t); $("#subTxt").textContent = `${x("Gửi đơn hàng", "Send order")} (${money(t)})`; };
   f.zone.onchange = upd; upd();
-  f.addEventListener("submit", e => {
+  f.addEventListener("submit", async e => {
     e.preventDefault();
     if (f.website.value) return; // honeypot chống bot
     const v = Object.fromEntries(new FormData(f)); let bad = false;
@@ -313,6 +338,13 @@ function wireCheckout() {
     setErr("agree", v.agree ? "" : x("Bạn cần đồng ý điều khoản trước khi gửi đơn", "Please accept the terms before sending"));
     if (bad) return;
     const order = { code: "DH-" + String(Math.floor(100000 + Math.random() * 900000)), status: "pending_payment", at: Date.now(), draft: d, customer: { name: v.name.trim(), phone: v.phone, email: v.email, address: v.address.trim(), zone: v.zone }, shipping: fee(), subtotal: d.unit, total: d.unit + fee(), lang };
+    if (REMOTE()) {
+      const btn = f.querySelector("button[type=submit]"); btn.disabled = true; $("#subTxt").textContent = x("Đang gửi đơn…", "Sending…");
+      try {
+        const res = await sb("rpc/create_order", { method: "POST", timeout: 10000, body: JSON.stringify({ payload: { item: { slug: d.slug, size: d.size, color: d.color, text: d.text || "", note: d.note || "" }, customer: { name: order.customer.name, phone: order.customer.phone, email: order.customer.email, address: order.customer.address, zone: order.customer.zone }, lang, quiz_ref: (location.hash.match(/KQ-\d+/) || [""])[0] || null } }) });
+        Object.assign(order, { code: res.code, subtotal: res.subtotal, shipping: res.shipping, total: res.total });
+      } catch (err) { btn.disabled = false; upd(); toast(x("Chưa gửi được đơn, bạn thử lại hoặc nhắn shop qua Instagram nhé.", "Couldn't send the order. Please retry or message us on Instagram.")); console.warn(err); return; }
+    }
     const orders = store.get("orders", []); orders.push(order); store.set("orders", orders);
     store.set("draft", null); nav("don-hang/" + order.code);
   });
@@ -399,4 +431,4 @@ document.querySelectorAll(".lang button").forEach(b => b.onclick = () => {
   const cur = location.hash.replace(/^#\/(vi|en)/, ""); lang = b.dataset.lang; location.hash = `#/${lang}${cur}`;
 });
 addEventListener("hashchange", route);
-route();
+loadRemote().finally(route);
